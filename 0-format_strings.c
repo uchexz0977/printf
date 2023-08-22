@@ -1,16 +1,9 @@
 #include "main.h"
-/**
- * _printf - Printf function
- * @format: format.
- * Return: Printed chars.
- */
+
 int _printf(const char *format, ...)
 {
-	int  printed_chars = 0;
+    int printed_chars = 0;
     va_list args;
-
-    if (format == NULL)
-        return (-1);
 
     va_start(args, format);
 
@@ -27,18 +20,16 @@ int _printf(const char *format, ...)
             if (*format == '\0')
                 break;
 
-            if (*format == '%')
+            switch (*format)
             {
-                write(1, format, 1);
-                printed_chars++;
-            }
-            else if (*format == 'c')
+            case 'c':
             {
                 char c = va_arg(args, int);
                 write(1, &c, 1);
                 printed_chars++;
+                break;
             }
-            else if (*format == 's')
+            case 's':
             {
                 char *str = va_arg(args, char *);
                 int str_len = 0;
@@ -46,9 +37,19 @@ int _printf(const char *format, ...)
                     str_len++;
                 write(1, str, str_len);
                 printed_chars += str_len;
+                break;
             }
-            format++;
+            case '%':
+            {
+                write(1, format, 1);
+                printed_chars++;
+                break;
+            }
+            default:
+                break;
+            }
         }
+        format++;
     }
     va_end(args);
     return printed_chars;
