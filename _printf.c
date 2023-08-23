@@ -1,11 +1,18 @@
 #include "main.h"
-
+/**
+ * _printf - Printf function
+ * @format: format.
+ * Return: Printed chars.
+ */
 int _printf(const char *format, ...)
 {
     int printed_chars = 0;
-    va_list args;
+    va_list args_list;
 
-    va_start(args, format);
+    if (*format == NULL)
+        return (-1);
+
+    va_start(args_list, format);
 
     while (*format)
     {
@@ -20,38 +27,31 @@ int _printf(const char *format, ...)
             if (*format == '\0')
                 break;
 
-            switch (*format)
+            if (*format == '%')
             {
-            case 'c':
+                write(1, format, 1);
+                printed_chars++;
+            }
+            else if (*format == 'c')
             {
-                char c = va_arg(args, int);
+                char c = va_arg(args_list, int);
                 write(1, &c, 1);
                 printed_chars++;
-                break;
             }
-            case 's':
+            else if (*format == 's')
             {
-                char *str = va_arg(args, char *);
+                char *str = va_arg(args_list, char *);
                 int str_len = 0;
                 while (str[str_len] != '\0')
                     str_len++;
                 write(1, str, str_len);
                 printed_chars += str_len;
-                break;
             }
-            case '%':
-            {
-                write(1, format, 1);
-                printed_chars++;
-                break;
-            }
-            default:
-                break;
-            }
+            format++;
         }
-        format++;
     }
-    va_end(args);
+    va_end(args_list);
     return printed_chars;
 }
+ 
 
